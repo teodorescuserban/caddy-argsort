@@ -39,29 +39,14 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	q := r.URL.Query()
-	caddy.Log().Info(r.URL.RawQuery)
-	if q.Has("z") {
-		q.Del("z")
-	}
 	// url.Values.Encode() will just do the sort for us
-	r.URL.RawQuery = q.Encode()
-	caddy.Log().Info(r.URL.RawQuery)
-
+	r.URL.RawQuery = r.URL.Query().Encode()
 	return next.ServeHTTP(w, r)
 }
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	d.Next() // consume directive name
-
-	// require an argument
-	// if !d.NextArg() {
-	// 	return d.ArgErr()
-	// }
-
-	// store the argument
-	// m.Output = d.Val()
 	return nil
 }
 
