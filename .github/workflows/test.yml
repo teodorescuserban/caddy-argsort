@@ -2,7 +2,9 @@ name: Build and test w/ Caddy
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - dev
+      - main
   pull_request:
     branches: [ main ]
 
@@ -20,5 +22,5 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    # - name: Build and test
-    #   run: test/run-test
+    - name: Build and test
+      run: test/run-test
