@@ -27,6 +27,7 @@ Caddyfile:
 }
 
 # or ensure query arguments sorting then passing it to another server
+# (useful when using other web server in the backend)
 :8882 {
     argsort
     reverse_proxy localhost:8883
