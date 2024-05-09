@@ -1,5 +1,6 @@
 # caddy-argsort
 
+![Build and test](https://github.com/teodorescuserban/caddy-argsort/actions/workflows/main.yml/badge.svg)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/teodorescuserban/caddy-argsort)
 [![Go Report Card](https://goreportcard.com/badge/github.com/teodorescuserban/caddy-argsort)](https://goreportcard.com/report/github.com/teodorescuserban/caddy-argsort)
