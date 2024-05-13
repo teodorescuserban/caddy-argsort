@@ -16,7 +16,7 @@ Caddyfile:
 # Add this block in top-level settings:
 {
     ...
-    order argsort before rewrite
+    order argsort before header
     ...
 }
 
