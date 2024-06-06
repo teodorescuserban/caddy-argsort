@@ -19,6 +19,7 @@ func init() {
 // Middleware implements an HTTP handler that
 // reorders the query arguments.
 type Middleware struct {
+	Lowercase bool `json:"lowercase,omitempty"`
 }
 
 // CaddyModule returns the Caddy module information.
@@ -41,24 +42,37 @@ func (m *Middleware) Validate() error {
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
-	// url.Values.Encode() will just do the sort for us
-	//r.URL.RawQuery = r.URL.Query().Encode()
-	// values = new(url.Values)
-	// var values url.Values
-	values := url.Values{}
-	for k, s := range r.URL.Query() {
-		for _, v := range s {
-			values.Add(strings.ToLower(k), v)
+	// url.Values.Encode() is doing the sort for us
+	if m.Lowercase {
+		values := url.Values{}
+		for k, s := range r.URL.Query() {
+			for _, v := range s {
+				values.Add(strings.ToLower(k), v)
+			}
 		}
+		r.URL.RawQuery = values.Encode()
+	} else {
+		r.URL.RawQuery = r.URL.Query().Encode()
 	}
-	r.URL.RawQuery = values.Encode()
 
 	return next.ServeHTTP(w, r)
 }
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
-func (m *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
-	d.Next() // consume directive name
+// argsort [lower]
+func (a *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+	// Set default value for Lower
+	a.Lowercase = false
+
+	for d.Next() {
+		if d.NextArg() {
+			if d.Val() == "lowercase" {
+				a.Lowercase = true
+			} else {
+				return d.ArgErr()
+			}
+		}
+	}
 	return nil
 }
 

@@ -1,0 +1,10 @@
+{
+        debug
+        order argsort before rewrite
+}
+
+:2015 {
+        argsort lowercase
+        header Content-Type "text/html; charset=utf-8"
+        respond "{http.request.uri.query}"
+}
