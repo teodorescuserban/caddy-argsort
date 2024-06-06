@@ -2,6 +2,8 @@ package argsort
 
 import (
 	"net/http"
+	"net/url"
+	"strings"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
@@ -40,7 +42,17 @@ func (m *Middleware) Validate() error {
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
 func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	// url.Values.Encode() will just do the sort for us
-	r.URL.RawQuery = r.URL.Query().Encode()
+	//r.URL.RawQuery = r.URL.Query().Encode()
+	// values = new(url.Values)
+	// var values url.Values
+	values := url.Values{}
+	for k, s := range r.URL.Query() {
+		for _, v := range s {
+			values.Add(strings.ToLower(k), v)
+		}
+	}
+	r.URL.RawQuery = values.Encode()
+
 	return next.ServeHTTP(w, r)
 }
 
