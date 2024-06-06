@@ -31,7 +31,7 @@ echobold() {
 
 test() {
     echobold "test case ${1}"
-    $XCADDY run --config test/Caddyfile.${1}&
+    $XCADDY run --adapter caddyfile --config test/Caddyfile.${1}&
     pid="$!"
     retry $(cat test/test-${1}.req) > output${1}
     diff output${1} test/test-${1}.res
@@ -51,3 +51,7 @@ $XCADDY list-modules
 test "1"
 
 test "2"
+
+test "3"
+
+test "4"
