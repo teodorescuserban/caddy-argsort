@@ -15,6 +15,7 @@ import (
 func init() {
 	caddy.RegisterModule(Argsort{})
 	httpcaddyfile.RegisterHandlerDirective("argsort", parseCaddyfile)
+	httpcaddyfile.RegisterDirectiveOrder("argsort", "before", "header")
 }
 
 // Argsort sort the query arguments after optionally lowercasing them.

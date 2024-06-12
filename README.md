@@ -5,32 +5,16 @@
 [![GoDoc](http://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/teodorescuserban/caddy-argsort)
 [![Go Report Card](https://goreportcard.com/badge/github.com/teodorescuserban/caddy-argsort)](https://goreportcard.com/report/github.com/teodorescuserban/caddy-argsort)
 
-This is a caddy plugin. Works with caddy 2.
+This is a caddy plugin. Works with caddy >= 2.8.0.
 Sort the request query arguments. Optionally case insensitive.
 
 ## Usage
-
-### Set the module order
-
-You will need to specify the execution order of this module in your caddyfile. This is done in the global options block.
-
-```caddyfile
-{
-    ...
-    order argsort before header
-    ...
-}
-```
 
 ### Simple usage
 
 Once the order has been set in the global options block, use `argsort` in any server block
 
 ```caddyfile
-{
-    order argsort before header
-}
-
 :8881 {
     header Content-Type "text/html; charset=utf-8"
     respond "Hello."
@@ -43,10 +27,6 @@ Once the order has been set in the global options block, use `argsort` in any se
 Once the order has been set in the global options block, use `argsort lowecase` in any server block
 
 ```caddyfile
-{
-    order argsort before header
-}
-
 :8881 {
     header Content-Type "text/html; charset=utf-8"
     respond "Hello."
@@ -59,10 +39,6 @@ Once the order has been set in the global options block, use `argsort lowecase` 
 Once the order has been set in the global options block, you ensure query arguments sorting for an upstream server
 
 ```caddyfile
-{
-    order argsort before header
-}
-
 :8882 {
     argsort
     reverse_proxy localhost:8883
