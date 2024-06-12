@@ -1,3 +1,4 @@
+// Package argsort provides a Caddy module that optionally lowercase and then sort the query arguments.
 package argsort
 
 import (
@@ -12,38 +13,41 @@ import (
 )
 
 func init() {
-	caddy.RegisterModule(Middleware{})
+	caddy.RegisterModule(Argsort{})
 	httpcaddyfile.RegisterHandlerDirective("argsort", parseCaddyfile)
 }
 
-// Middleware implements an HTTP handler that
-// reorders the query arguments.
-type Middleware struct {
+// Argsort implements an HTTP handler that will optionally lowercase and sort the query arguments.
+//
+// Syntax:
+//
+//	argsort [lowercase]
+type Argsort struct {
 	Lowercase bool `json:"lowercase,omitempty"`
 }
 
 // CaddyModule returns the Caddy module information.
-func (Middleware) CaddyModule() caddy.ModuleInfo {
+func (Argsort) CaddyModule() caddy.ModuleInfo {
 	return caddy.ModuleInfo{
 		ID:  "http.handlers.argsort",
-		New: func() caddy.Module { return new(Middleware) },
+		New: func() caddy.Module { return new(Argsort) },
 	}
 }
 
 // Provision implements caddy.Provisioner.
-func (m *Middleware) Provision(ctx caddy.Context) error {
+func (a *Argsort) Provision(ctx caddy.Context) error {
 	return nil
 }
 
 // Validate implements caddy.Validator.
-func (m *Middleware) Validate() error {
+func (a *Argsort) Validate() error {
 	return nil
 }
 
 // ServeHTTP implements caddyhttp.MiddlewareHandler.
-func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
+func (a Argsort) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhttp.Handler) error {
 	// url.Values.Encode() is doing the sort for us
-	if m.Lowercase {
+	if a.Lowercase {
 		values := url.Values{}
 		for k, s := range r.URL.Query() {
 			for _, v := range s {
@@ -60,7 +64,7 @@ func (m Middleware) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddy
 
 // UnmarshalCaddyfile implements caddyfile.Unmarshaler.
 // argsort [lower]
-func (a *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
+func (a *Argsort) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	// Set default value for Lower
 	a.Lowercase = false
 
@@ -76,17 +80,19 @@ func (a *Middleware) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	return nil
 }
 
-// parseCaddyfile unmarshals tokens from h into a new Middleware.
+// parseCaddyfile sets up the handler from Caddyfile tokens. Syntax:
+//
+//	argsort [lowecase]
 func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
-	var m Middleware
-	err := m.UnmarshalCaddyfile(h.Dispenser)
-	return m, err
+	var a Argsort
+	err := a.UnmarshalCaddyfile(h.Dispenser)
+	return a, err
 }
 
 // Interface guards
 var (
-	_ caddy.Provisioner           = (*Middleware)(nil)
-	_ caddy.Validator             = (*Middleware)(nil)
-	_ caddyhttp.MiddlewareHandler = (*Middleware)(nil)
-	_ caddyfile.Unmarshaler       = (*Middleware)(nil)
+	_ caddy.Provisioner           = (*Argsort)(nil)
+	_ caddy.Validator             = (*Argsort)(nil)
+	_ caddyhttp.MiddlewareHandler = (*Argsort)(nil)
+	_ caddyfile.Unmarshaler       = (*Argsort)(nil)
 )
