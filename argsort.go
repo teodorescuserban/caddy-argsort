@@ -17,12 +17,13 @@ func init() {
 	httpcaddyfile.RegisterHandlerDirective("argsort", parseCaddyfile)
 }
 
-// Argsort implements an HTTP handler that will optionally lowercase and sort the query arguments.
+// Argsort sort the query arguments after optionally lowercasing them.
 //
 // Syntax:
 //
 //	argsort [lowercase]
 type Argsort struct {
+	// Lowercase the query arguments before sorting them.
 	Lowercase bool `json:"lowercase,omitempty"`
 }
 
